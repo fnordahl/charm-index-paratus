@@ -1,0 +1,9 @@
+includes:
+  - 'layer:basic'
+  - 'interface:mysql-shared'
+repo: 'https://github.com/fnordahl/index-paratus'
+options:
+  basic:
+    packages: ['python3-pymysql']
+    use_venv: True
+    include_system_packages: True
