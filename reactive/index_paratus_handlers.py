@@ -17,9 +17,12 @@ import charmhelpers.core as ch_core
 import charms.reactive as reactive
 import pymysql
 
+stop = False
 
-def timeout_handler(signum, frame):
-    raise TimeoutError
+
+def alarm_handler(signum, frame):
+    global stop
+    stop = True
 
 
 @reactive.when_not('shared-db.connected')
@@ -53,7 +56,7 @@ def probe_database(database):
         level=ch_core.hookenv.INFO,
     )
     timeout = 600
-    signal.signal(signal.SIGALRM, timeout_handler)
+    signal.signal(signal.SIGALRM, alarm_handler)
     signal.alarm(timeout)
     try:
         conn = pymysql.connect(host=database.db_host(),
@@ -66,7 +69,7 @@ def probe_database(database):
         i = 0
         s = 0
         spinner = ['\\', '|', '/', '-']
-        while True:
+        while not stop:
             cur.execute("SELECT 1")
             i += 1
             if not i % 20000:
@@ -82,7 +85,8 @@ def probe_database(database):
     except (ConnectionRefusedError, pymysql.err.InternalError,
             pymysql.err.OperationalError) as e:
         ch_core.hookenv.status_set('blocked', e.args[1])
-    except (TimeoutError):
+
+    if stop:
         ch_core.hookenv.log('Probe stopped after running successfully for {}s'
                             .format(timeout), level=ch_core.hookenv.INFO)
         ch_core.hookenv.status_set('active', 'Unit ready, probe successfull!')
