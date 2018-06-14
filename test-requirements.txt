@@ -1,0 +1,7 @@
+charms.reactive
+coverage
+flake8
+mock
+nose
+pymysql
+git+https://github.com/openstack/charms.openstack#egg=charms.openstack
