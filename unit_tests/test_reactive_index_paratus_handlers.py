@@ -20,7 +20,7 @@ ch.mock_charmhelpers()
 
 import charms.reactive  # noqa E402
 
-# Mock out reactive decorators prior to importing reactive.vault
+# Mock out reactive decorators prior to importing reactive handler bits
 dec_mock = mock.MagicMock()
 dec_mock.return_value = lambda x: x
 charms.reactive.hook = dec_mock
