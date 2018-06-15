@@ -89,4 +89,4 @@ def probe_database(database):
     if stop:
         ch_core.hookenv.log('Probe stopped after running successfully for {}s'
                             .format(timeout), level=ch_core.hookenv.INFO)
-        ch_core.hookenv.status_set('active', 'Unit ready, probe successfull!')
+        ch_core.hookenv.status_set('active', 'Unit ready, probe successful!')
